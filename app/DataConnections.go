@@ -72,6 +72,10 @@ func statisticsConnection(conn net.Conn) {
 				fmt.Println("Ошибка записи в файл:", err)
 				return
 			}
+			_, statErr := conn.Write([]byte("1\n"))
+			if statErr != nil {
+				fmt.Println(statErr)
+			}
 		}
 	}
 }

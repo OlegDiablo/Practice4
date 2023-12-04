@@ -120,12 +120,12 @@ func reportURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(str) == 1 {
-		_, stat_err := statConn.Write([]byte("2 " + str[0] + " " + str[1] + " " + str[2] + "\n"))
+		_, stat_err := statConn.Write([]byte("2 " + str[0] + "\n"))
 		if stat_err != nil {
 			fmt.Println(stat_err)
 		}
 	} else if len(str) == 2 {
-		_, stat_err := statConn.Write([]byte("2 " + str[0] + " " + str[1] + " " + str[2] + "\n"))
+		_, stat_err := statConn.Write([]byte("2 " + str[0] + " " + str[1] + "\n"))
 		if stat_err != nil {
 			fmt.Println(stat_err)
 		}
@@ -133,6 +133,19 @@ func reportURL(w http.ResponseWriter, r *http.Request) {
 		_, stat_err := statConn.Write([]byte("2 " + str[0] + " " + str[1] + " " + str[2] + "\n"))
 		if stat_err != nil {
 			fmt.Println(stat_err)
+		}
+	}
+
+	scanner := bufio.NewScanner(statConn)
+	scanner.Scan()
+	response := scanner.Text()
+	if response == "1" {
+		jsonData, jsonErr := os.ReadFile("report.json")
+		if err != nil {
+			fmt.Println(jsonErr)
+		}
+		for _, jsonLine := range jsonData {
+			fmt.Fprint(w, string(jsonLine))
 		}
 	}
 
